@@ -12,15 +12,16 @@ from Crawler import Crawler
 logger = logging.getLogger()
 logger.setLevel(logging.WARNING)
 
-INTERVAL_IN_MINUTES = 1
+INTERVAL_IN_MINUTES = 5
 
 DEFAULT_THRESHOLD_VALUE = 13
 
 
 def usage():
     print 'This program checks the Tesouro Direto Market in intervals ' \
-          'of 5 minutes in order to identify if the tax of a selected ' \
-          'product is above the threshold specified by the user.'
+          'of %d minute(s) in order to identify if the tax of a selected ' \
+          'product is above the threshold specified by the user.' \
+          % INTERVAL_IN_MINUTES
     print ''
     print 'Usage: %s -i <indice_do_prod_tes_direto> -l <limiar>' % sys.argv[0]
 
@@ -71,6 +72,7 @@ def main(argv):
                                                     'idxItem=', 'limiar='])
         if not opts:
             usage()
+            sys.exit(2)
 
     except getopt.GetoptError, err:
         print str(err)
