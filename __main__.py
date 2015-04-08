@@ -108,8 +108,9 @@ def main(argv):
     else:
         THRESHOLD = limiar
 
+    print 'Listening to the following product:'
+
     while True:
-        print 'Listening to the following product:'
 
         try:
             items = crawler.getItems()
