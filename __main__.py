@@ -9,9 +9,6 @@ import time
 from Crawler import Crawler
 # from SendEmail import SendEmail
 
-logger = logging.getLogger()
-logger.setLevel(logging.WARNING)
-
 INTERVAL_IN_MINUTES = 5
 
 DEFAULT_THRESHOLD_VALUE = 13
@@ -61,6 +58,9 @@ def verify_if_tax_is_above_threshold(THRESHOLD, item):
 
 
 def main(argv):
+
+    logging.basicConfig()
+    logger = logging.getLogger()
 
     idxItem = -1
     limiar = '0'
