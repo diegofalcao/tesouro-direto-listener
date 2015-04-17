@@ -7,11 +7,14 @@ import logging
 import time
 
 from Crawler import Crawler
-# from SendEmail import SendEmail
+from SendEmail import SendEmail
 
 INTERVAL_IN_MINUTES = 5
 
 DEFAULT_THRESHOLD_VALUE = 13
+
+logger = logging.getLogger()
+logger.setLevel(logging.WARNING)
 
 
 def usage():
@@ -20,7 +23,17 @@ def usage():
           'product is above the threshold specified by the user.' \
           % INTERVAL_IN_MINUTES
     print ''
-    print 'Usage: %s -i <indice_do_prod_tes_direto> -l <limiar>' % sys.argv[0]
+    print 'Usage: %s -i <tes_direto_prod_indices> -l <limiar>' % sys.argv[0]
+    print '\nOptions:'
+    print '\t-h : prints the help'
+    print '\t-o : prints all the available tesouro direto product indices'
+
+
+def beep():
+    for i in range(0, 4):
+        print "\a",  # plays a beep in an OS independent way
+
+        time.sleep(0.5)
 
 
 def trigger_action(item_name, threshold, tax):
@@ -31,19 +44,23 @@ def trigger_action(item_name, threshold, tax):
 
     print msg
 
-    # email_sender = SendEmail('smtp.gmail.com', 587, '<user>',
-    #                          '<pass>')
+    beep()
 
-    # try:
-    #     email_sender.send('<user>', 'TESOURO DIRETO THRESHOLD ',
-    #                       msg)
 
-    # except EnvironmentError as err:
-    #     logger.error(err)
+def sendEmail(msg):
+    email_sender = SendEmail('smtp.gmail.com', 587, '<user>',
+                             '<pass>')
 
-    #     print 'There is a problem with your e-mail configuration. So, the ' \
-    #           'program will not be able to notify you. Please, stop the ' \
-    #           'program and fix the configuration!'
+    try:
+        email_sender.send('<user>', 'TESOURO DIRETO THRESHOLD ',
+                          msg)
+
+    except EnvironmentError as err:
+        logger.error(err)
+
+        print 'There is a problem with your e-mail configuration. So, the ' \
+              'program will not be able to notify you. Please, stop the ' \
+              'program and fix the configuration!'
 
 
 def verify_if_tax_is_above_threshold(THRESHOLD, item):
@@ -110,21 +127,29 @@ def main(argv):
 
     print 'Listening to the following product:'
 
-    while True:
+    items = crawler.getItems()
 
-        try:
-            items = crawler.getItems()
+    print '%s' % items[idxItem][0],
+    print '%s' % items[idxItem][1],
+    print '%s' % items[idxItem][2]
 
-            print '%s' % items[idxItem][0],
-            print '%s' % items[idxItem][1],
-            print '%s' % items[idxItem][2]
+    print '\n\nHit the CTRL+C to exit...'
 
-            verify_if_tax_is_above_threshold(THRESHOLD, items[idxItem])
+    try:
+        while True:
 
-        except IOError as err:
-            logger.warn(err)
+            try:
+                verify_if_tax_is_above_threshold(THRESHOLD, items[idxItem])
 
-        time.sleep(60 * INTERVAL_IN_MINUTES)
+            except IOError as err:
+                logger.warn(err)
+
+            time.sleep(60 * INTERVAL_IN_MINUTES)
+
+    except KeyboardInterrupt:
+        logger.debug('User pressed CTLR+C')
+
+        sys.exit(0)
 
 if __name__ == '__main__':
     status = main(sys.argv[1:])
