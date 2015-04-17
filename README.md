@@ -12,5 +12,8 @@ This programs depends on BeautifulSoup module in order to crawl the webpage cont
 
 In order to install this module, run the following command:
 
-pip install beautifulsoup4
+$ pip install beautifulsoup4
+$ python __main__.py -i <tesouro_direto_prod_index> < -l <threshold>
 
+You can check all the product indexes with the following command:
+$ python __main__.py -o
