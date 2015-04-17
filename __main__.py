@@ -9,7 +9,7 @@ import time
 from Crawler import Crawler
 from SendEmail import SendEmail
 
-INTERVAL_IN_MINUTES = 0.1
+INTERVAL_IN_MINUTES = 5
 
 DEFAULT_THRESHOLD_VALUE = 13
 
