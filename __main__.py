@@ -9,7 +9,7 @@ import time
 from Crawler import Crawler
 from SendEmail import SendEmail
 
-INTERVAL_IN_MINUTES = 5
+INTERVAL_IN_MINUTES = 0.1
 
 DEFAULT_THRESHOLD_VALUE = 13
 
@@ -125,21 +125,27 @@ def main(argv):
     else:
         THRESHOLD = limiar
 
+    print '\n\nHit the CTRL+C to exit...\n'
+
     print 'Listening to the following product:'
 
-    items = crawler.getItems()
-
-    print '%s' % items[idxItem][0],
-    print '%s' % items[idxItem][1],
-    print '%s' % items[idxItem][2]
-
-    print '\n\nHit the CTRL+C to exit...'
+    lastProductValue = -1
 
     try:
         while True:
 
             try:
+                items = crawler.getItems()
+
+                #  Checking if the value has changed to print the new values...
+                if lastProductValue != items[idxItem][2]:
+                    print '%s' % items[idxItem][0],
+                    print '%s' % items[idxItem][1],
+                    print '%s' % items[idxItem][2]
+
                 verify_if_tax_is_above_threshold(THRESHOLD, items[idxItem])
+
+                lastProductValue = items[idxItem][2]
 
             except IOError as err:
                 logger.warn(err)
@@ -147,7 +153,7 @@ def main(argv):
             time.sleep(60 * INTERVAL_IN_MINUTES)
 
     except KeyboardInterrupt:
-        logger.debug('User pressed CTLR+C')
+        logger.debug('User pressed CTRL+C')
 
         sys.exit(0)
 
