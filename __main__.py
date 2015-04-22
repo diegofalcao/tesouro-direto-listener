@@ -127,7 +127,9 @@ def main(argv):
 
     print '\n\nHit the CTRL+C to exit...\n'
 
-    print 'Listening to the following product:'
+    print 'You will be notified when the tax is equal ' \
+          'or above %s%%...' % THRESHOLD
+    print 'Listening to the following product: '
 
     lastProductValue = -1
 
@@ -149,6 +151,7 @@ def main(argv):
 
             except IOError as err:
                 logger.warn(err)
+                lastProductValue = -1
 
             time.sleep(60 * INTERVAL_IN_MINUTES)
 
