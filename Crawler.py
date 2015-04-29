@@ -50,6 +50,12 @@ class Crawler:
 
             index = index + 1
 
+        if len(indexer) <= 1:
+            raise IOError('Problems parsing the \'Tesouro Direto\' '
+                          'page. This page is facing some problems '
+                          'right now. So, be patient... they will fix it '
+                          'soon.')
+
         return indexer
 
     def show_items_indexes(self):
